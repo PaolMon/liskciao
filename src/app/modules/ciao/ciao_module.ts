@@ -52,6 +52,20 @@ export class CiaoModule extends BaseModule {
         // Example below
         // getBalance: async (params) => this._dataAccess.account.get(params.address).token.balance,
         // getBlockByID: async (params) => this._dataAccess.blocks.get(params.id),
+        quantiSaluti : async () => {
+            const res = await this._dataAccess.getChainState(CHAIN_STATE_HELLO_COUNTER);
+            if (!res) {
+                throw new Error (
+                    'su tutti scostumati'
+                )
+            }
+
+            const count = codec.decode<counter>(
+                counterSchema,
+                res
+            )
+            return count
+        }
     };
     public reducers = {
         // Example below
@@ -103,7 +117,7 @@ export class CiaoModule extends BaseModule {
                 _input.transaction.asset
             );
 
-            this._channel.publish('nuovoSaluto', {
+            this._channel.publish('ciao:nuovoSaluto', {
                 sender: _input.transaction.senderAddress.toString('hex'),
                 hello: asset.messaggio
             });

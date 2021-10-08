@@ -9,9 +9,10 @@
 		"logFileName": "lisk.log"
 	},
 	"rpc": {
-		"enable": false,
-		"mode": "ipc",
-		"port": 8080
+		"enable": true,
+		"mode": "ws",
+		"port": 8080,
+		"host": "0.0.0.0"
 	},
 	"genesisConfig": {
 		"blockTime": 10,
@@ -2224,7 +2225,7 @@
 	},
 	"plugins": {
 		"dashboard": {
-			"applicationUrl": "ws://localhost:8088/ws",
+			"applicationUrl": "ws://localhost:8080/ws",
 			"port": 4005,
 			"host": "0.0.0.0",
 			"applicationName": "Lisk-Ciao"
