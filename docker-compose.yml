@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+
+  lisk: 
+    image: pmonteverdi/lisk-ciao:1
+    container_name: lisk
+    restart: unless-stopped
+    networks:
+      - webnet_lisk
+
+  nginx:
+    image: nginx:1.15-alpine
+    container_name: nginx_lisk
+    restart: unless-stopped
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/log:/var/log/nginx
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    ports:
+      - "80:80"
+      - "443:443"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    networks:
+      - webnet_lisk
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot_lisk
+    restart: unless-stopped
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+      
+networks:
+  webnet_lisk:
