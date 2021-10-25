@@ -27,6 +27,7 @@ import {
 } from 'lisk-sdk';
 import { saluto, SalutoAsset, salutoSchema } from "./assets/saluto_asset";
 import { CHAIN_STATE_HELLO_COUNTER, counter, counterSchema } from './counter';
+import { CHAIN_STATE_HELLOS, singolo_saluto, lista_saluti, listaSchema } from './lista';
 
 export type accountCiao = {
     ciao : {
@@ -65,7 +66,22 @@ export class CiaoModule extends BaseModule {
                 res
             )
             return count
+        },
+        listaSaluti : async () => {
+            const res = await this._dataAccess.getChainState(CHAIN_STATE_HELLOS);
+            if (!res) {
+                throw new Error (
+                    'nessuno ha ancora salutato'
+                )
+            }
+
+            const list = codec.decode<lista_saluti>(
+                listaSchema,
+                res
+            )
+            return list
         }
+
     };
     public reducers = {
         // Example below
@@ -121,21 +137,76 @@ export class CiaoModule extends BaseModule {
                 sender: _input.transaction.senderAddress.toString('hex'),
                 hello: asset.messaggio
             });
+
         }
-        }
+    }
 
     public async afterTransactionApply(_input: TransactionApplyContext) {
         // Get any data from stateStore using transaction info, below is an example
         // const sender = await _input.stateStore.account.getOrDefault<TokenAccount>(_input.transaction.senderAddress);
+        if (_input.transaction.moduleID === this.id && _input.transaction.assetID === 0) {
+
+            const asset = codec.decode<saluto>(
+                salutoSchema,
+                _input.transaction.asset
+            );
+
+            const res = await this._dataAccess.getChainState(CHAIN_STATE_HELLOS);
+            if (!res) {
+                throw new Error (
+                    'nessuno ha ancora salutato'
+                )
+            }
+            const list = codec.decode<lista_saluti>(
+                listaSchema,
+                res
+            )
+
+            const newSaluto: singolo_saluto = {
+                messaggio: asset.messaggio,
+                sender: _input.transaction.senderAddress.toString('hex')
+            }
+
+            //list.saluti.push(newSaluto)
+
+            const newList: lista_saluti = {
+                saluti: [...list.saluti, newSaluto]
+            }
+            
+
+            await _input.stateStore.chain.set(
+                CHAIN_STATE_HELLOS,
+                codec.encode(listaSchema, newList)
+            )
+
+            
+
+        }
     }
 
     public async afterGenesisBlockApply(_input: AfterGenesisBlockApplyContext) {
+
         // Set the hello counter to zero after the genesis block is applied
         const saluti: counter = { numeroDiSaluti: 0 };
         await _input.stateStore.chain.set(
             CHAIN_STATE_HELLO_COUNTER,
             codec.encode(counterSchema, saluti)
         );
+
+        const saluto: lista_saluti = {
+            saluti: [
+                {
+                    messaggio: 'ciao Lisk',
+                    sender: "Dino"
+                }
+            ]
+        }
+        await _input.stateStore.chain.set(
+            CHAIN_STATE_HELLOS,
+            codec.encode(listaSchema, saluto)
+        );
+
+        
 
     }
 }
