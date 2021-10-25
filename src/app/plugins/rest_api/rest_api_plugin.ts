@@ -56,10 +56,13 @@ var cors = require('cors')
 			this._app.use(express.json());
 			this._app.use(cors());
 			this._app.get("/api/", async (_req, _res) => {
-				_res.send("<h1>LISK REST API!!<h1>")
+				_res.send("<h1>LISK REST API!!</h1><br><p><h3>/api/saluti</h3>restituisce il numero di saluti</p><br><p><h3>/api/listaSaluti</h3>restituisce la lista dei saluti</p>")
 			})
 			this._app.get("/api/saluti", async (__req, _res) =>{
 				_res.json(await _channel.invoke("ciao:quantiSaluti"))
+			})
+			this._app.get("/api/listaSaluti", async (__req, _res) =>{
+				_res.json(await _channel.invoke("ciao:listaSaluti"))
 			})
 
 			this._server = this._app.listen(8090, "0.0.0.0")
