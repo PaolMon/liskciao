@@ -2,6 +2,8 @@ import { BasePlugin, PluginInfo } from 'lisk-sdk';
 import type { BaseChannel, EventsDefinition, ActionsDefinition, SchemaWithDefault } from 'lisk-sdk';
 import { __read } from 'tslib';
 const express = require( 'express')
+var cors = require('cors')
+
 
  /* eslint-disable class-methods-use-this */
  /* eslint-disable  @typescript-eslint/no-empty-function */
@@ -51,7 +53,8 @@ const express = require( 'express')
 		// this._channel = channel;
 		// this._channel.once('app:ready', () => {});
 			this._app = express();
-			this._app.use(express.json())
+			this._app.use(express.json());
+			this._app.use(cors());
 			this._app.get("/prova", async (_req, _res) => {
 				_res.send("CIAO MONDO DELLE API!!!")
 			})
