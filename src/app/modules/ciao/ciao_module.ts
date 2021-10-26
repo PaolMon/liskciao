@@ -196,8 +196,8 @@ export class CiaoModule extends BaseModule {
         const saluto: lista_saluti = {
             saluti: [
                 {
-                    messaggio: '',
-                    sender: ''
+                    messaggio: 'CIAO',
+                    sender: 'Mario'
                 }
             ]
         }

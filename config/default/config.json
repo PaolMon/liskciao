@@ -1,5 +1,5 @@
 {
-	"label": "beta-sdk-app",
+	"label": "test-lisk-ciao-blockchain",
 	"version": "0.0.0",
 	"networkVersion": "1.0",
 	"rootPath": "~/.lisk",
@@ -16,7 +16,7 @@
 	},
 	"genesisConfig": {
 		"blockTime": 10,
-		"communityIdentifier": "sdk",
+		"communityIdentifier": "lisk-ciao",
 		"maxPayloadLength": 15360,
 		"bftThreshold": 68,
 		"minFeePerByte": 1000,
@@ -24,7 +24,7 @@
 			{
 				"moduleID": 5,
 				"assetID": 0,
-				"baseFee": "1000000000"
+				"baseFee": "1000000"
 			}
 		],
 		"rewards": {
@@ -2210,7 +2210,7 @@
 	"network": {
 		"seedPeers": [
 			{
-				"ip": "127.0.0.1",
+				"ip": "65.108.52.139",
 				"port": 5000
 			}
 		],
@@ -2225,7 +2225,7 @@
 	},
 	"plugins": {
 		"dashboard": {
-			"applicationUrl": "ws://localhost:8080/ws",
+			"applicationUrl": "ws://127.0.0.1:8080/ws",
 			"port": 4005,
 			"host": "0.0.0.0",
 			"applicationName": "Lisk-Ciao"

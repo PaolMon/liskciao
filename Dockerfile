@@ -4,5 +4,6 @@ WORKDIR /usr/src/app
 COPY . .
 RUN npm install --global lisk-commander@5.1.4
 RUN npm install
+EXPOSE 5000
 ENTRYPOINT ["./bin/run"]
 CMD ["start"]
